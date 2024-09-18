@@ -21,10 +21,10 @@ public class Population
     {
         Guys = [];
     }
-    public Population(int Count_1x1, int Count_2x2, int Count_3x3)
+    public Population(int Count_1x1, int Count_2x2, int Count_3x3, int PopulationSize = POPULATION_SIZE)
     {
         Guys = [];
-        for (int i = 0; i < POPULATION_SIZE; i++) {
+        for (int i = 0; i < PopulationSize; i++) {
             Guys.Add(new Genotype(Count_1x1, Count_2x2, Count_3x3));
         }
     }
