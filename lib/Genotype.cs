@@ -1,13 +1,14 @@
 using System;
+using System.Collections;
 
 namespace PackagingGenetic;
 
 using static Constants;
 
-public class Genotype
+public class Genotype : IEnumerable
 {
-    readonly int[] X; 
-    readonly int[] Y;
+    public readonly int[] X; 
+    public readonly int[] Y;
     readonly int[] Size;
     readonly int ItemCount;
     public int Square { get; set; } 
@@ -48,6 +49,9 @@ public class Genotype
         }
         return true;
     }
+
+    public IEnumerator GetEnumerator() => new GenotypeEnumerator(X, Y, Size);
+
     public Genotype(int Count_1x1, int Count_2x2, int Count_3x3)
     {
         ItemCount = Count_1x1 + Count_2x2 + Count_3x3;
@@ -111,4 +115,39 @@ public class Genotype
         }
         Square = CalcSquare();
     }
+}
+
+public class GenotypeEnumerator : IEnumerator
+{
+    readonly int[] X;
+    readonly int[] Y;
+    readonly int[] Size;
+    int i = -1;
+
+    public GenotypeEnumerator(int[] x, int[] y, int[] size)
+    {
+        X = x;
+        Y = y;
+        Size = size;
+    }
+    public object Current
+    {
+        get
+        {
+            if (i == -1 || i >= X.Length)
+                throw new ArgumentException();
+            return new Tuple<int,int, int>(X[i], Y[i], Size[i]);
+        }
+    }
+    public bool MoveNext()
+    {
+        if (i < X.Length - 1)
+        {
+            i++;
+            return true;
+        }
+        else
+            return false;
+    }
+    public void Reset() => i = -1;
 }
