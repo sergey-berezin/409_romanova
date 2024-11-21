@@ -1,5 +1,6 @@
 namespace PackagingGenetic;
 
+using System.Diagnostics.Metrics;
 using static Constants;
 
 public class Population
@@ -28,30 +29,64 @@ public class Population
             Guys.Add(new Genotype(Count_1x1, Count_2x2, Count_3x3));
         }
     }
+
     public void Reproduction(int ChildrenCount)
     {
-        int i = 0;
-        int StopCnt = 0;
         ChildrenCount = Math.Min(ChildrenCount, Guys.Count / 2);
-        while (ChildrenCount > 0 && StopCnt < RANDOM_STOP_CNT) { 
-            Genotype Child = new Genotype(Guys[i], Guys[i + 1]);
-            if (Child.CheckCorrectness()) {
+        var Tasks = new Task<Genotype>[ChildrenCount];
+
+        for (int i = 0; i < ChildrenCount; i++) {
+            Tasks[i] = Task.Factory.StartNew(() => new Genotype(Guys[i], Guys[Guys.Count - 1 - i]));
+        }
+        Task.WaitAll(Tasks);
+        for (int i = 0; i < ChildrenCount; i++) {
+            Genotype Child = Tasks[i].Result;
+            if (Child.CheckCorrectness())
+            {
                 Guys.Add(Child);
-                i += 2;
-                ChildrenCount--;
             }
-            StopCnt++;
         }
     }
+
+    public void ReproductionSolo(int ChildrenCount)
+    {
+        ChildrenCount = Math.Min(ChildrenCount, Guys.Count / 2);
+
+        for (int i = 0; i < ChildrenCount; i++)
+        {
+            Genotype Child = new Genotype(Guys[i], Guys[Guys.Count - 1 - i]);
+            if (Child.CheckCorrectness())
+            {
+                Guys.Add(Child);
+            }
+        }
+    }
+
     public void Mutation(int MutantCount)
     {
         MutantCount = Math.Min(MutantCount, Guys.Count);
+        var Tasks = new Task<Genotype>[MutantCount];
+        for (int i = 0; i < MutantCount; i++)
+        {
+            Tasks[i] = Task.Factory.StartNew(() => new Genotype(Guys[i]));
+        }
+        Task.WaitAll(Tasks);
         for (int i = 0; i < MutantCount; i++) {
-            Guys.Add(new Genotype(Guys[i]));
-            i++;
+            Guys.Add(Tasks[i].Result); 
         }
     }
+
+    public void MutationSolo(int MutantCount)
+    {
+        MutantCount = Math.Min(MutantCount, Guys.Count);
+        for (int i = 0; i < MutantCount; i++)
+        {
+            Guys.Add(new Genotype(Guys[i]));
+        }
+    }
+
     public Population Selection(int PopulationSize = POPULATION_SIZE)
+    
     {
         Population CoolGuys = new();
         Guys.Sort(GenotypeCMP);
