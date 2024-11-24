@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.Windows.Threading;
 using System.Timers;
+using Microsoft.Win32;
 
 namespace WpfGenetic
 {
@@ -66,10 +67,17 @@ namespace WpfGenetic
                 StartStop.Content = "Start";
             } else
             {
-                SlowTimer.Start();
+                //SlowTimer.Start();
                 StartStop.Content = "Stop";
+                if (SpeedButton.Content == "Faster")
+                {
+                    SlowTimer.Start();
+                } else
+                {
+                    FastTimer.Start();
+                }
             }
-            
+
         }
         private void SpeedButtonClick(object sender, RoutedEventArgs e)
         {
@@ -100,6 +108,49 @@ namespace WpfGenetic
                 Template_canvas1.Children.Remove(c);
                 SquareCanvas.Children.Add(c);
             }
+        }
+        private void SaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (ModelView.DirPath == "nope")
+            {
+                OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+                openFolderDialog.Title = "Select folder";
+                if (openFolderDialog.ShowDialog() == true)
+                {
+                    ModelView.DirPath = openFolderDialog.FolderName;
+                } else
+                {
+                    return;
+                }
+            }            
+            SaveWindow saveWindow = new SaveWindow(ModelView);
+            saveWindow.ShowDialog();
+        }
+
+
+        private void LoadButtonClick(object sender, RoutedEventArgs e)
+        {
+            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+            openFolderDialog.Title = "Select folder";
+            openFolderDialog.InitialDirectory = "C:\\";
+            if (openFolderDialog.ShowDialog() == true)
+            {
+                ModelView.LoadDirPath = openFolderDialog.FolderName;
+            }
+            else
+            {
+                return;
+            }
+            if (ModelView.MainFileExists())
+            {
+                LoadWindow loadWindow = new LoadWindow(ModelView);
+                loadWindow.ShowDialog();
+                DrawPicture();
+            } else
+            {
+                MessageBox.Show("No files in selected folder");
+            }
+            
         }
     }
 }
