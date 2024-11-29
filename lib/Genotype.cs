@@ -5,13 +5,41 @@ namespace PackagingGenetic;
 
 using static Constants;
 
-public class Genotype : IEnumerable
+public class Square
 {
-    public readonly int[] X; 
-    public readonly int[] Y;
-    readonly int[] Size;
-    readonly int ItemCount;
-    public int Square { get; set; } 
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Size { get; set; }
+    public Square(int x, int y, int size)
+    {
+        this.X = x;
+        this.Y = y;
+        this.Size = size;
+    }
+}
+
+public class Genotype //: IEnumerable
+{
+    public int[] X { get; set; }
+    public int[] Y { get; set; }
+    public int[] Size { get; set; }
+    public int ItemCount { get; set; }
+    public int Square { get; set; }
+    public Genotype() { }
+    //public Genotype(Square S)
+    //{
+    //    int n = 10;
+    //    X = new int[n];
+    //    Y = new int[n];
+    //    Size = new int[n];
+    //}
+    //public Genotype(List<Square> SquareList)
+    //{
+    //    int n = SquareList.Count;
+    //    X = new int[n];
+    //    Y = new int[n];
+    //    Size = new int[n];
+    //}
     public string StringGenotype() 
     {
         string GenStr = "";
@@ -50,8 +78,17 @@ public class Genotype : IEnumerable
         return true;
     }
 
-    public IEnumerator GetEnumerator() => new GenotypeEnumerator(X, Y, Size);
+    //public IEnumerator GetEnumerator() => new GenotypeEnumerator(X, Y, Size);
 
+    public List<Tuple<int, int, int>> SquareList()
+    {
+        List<Tuple<int, int, int>> ListSquare = new();
+        for (int i = 0; i < ItemCount; i++)
+        {
+            ListSquare.Add(new Tuple<int, int, int>(X[i], Y[i], Size[i]));
+        }
+        return ListSquare;
+    }
     public Genotype(int Count_1x1, int Count_2x2, int Count_3x3)
     {
         ItemCount = Count_1x1 + Count_2x2 + Count_3x3;
@@ -117,37 +154,37 @@ public class Genotype : IEnumerable
     }
 }
 
-public class GenotypeEnumerator : IEnumerator
-{
-    readonly int[] X;
-    readonly int[] Y;
-    readonly int[] Size;
-    int i = -1;
+//public class GenotypeEnumerator : IEnumerator
+//{
+//    readonly int[] X;
+//    readonly int[] Y;
+//    readonly int[] Size;
+//    int i = -1;
 
-    public GenotypeEnumerator(int[] x, int[] y, int[] size)
-    {
-        X = x;
-        Y = y;
-        Size = size;
-    }
-    public object Current
-    {
-        get
-        {
-            if (i == -1 || i >= X.Length)
-                throw new ArgumentException();
-            return new Tuple<int,int, int>(X[i], Y[i], Size[i]);
-        }
-    }
-    public bool MoveNext()
-    {
-        if (i < X.Length - 1)
-        {
-            i++;
-            return true;
-        }
-        else
-            return false;
-    }
-    public void Reset() => i = -1;
-}
+//    public GenotypeEnumerator(int[] x, int[] y, int[] size)
+//    {
+//        X = x;
+//        Y = y;
+//        Size = size;
+//    }
+//    public object Current
+//    {
+//        get
+//        {
+//            if (i == -1 || i >= X.Length)
+//                throw new ArgumentException();
+//            return new Square(X[i], Y[i], Size[i]);
+//        }
+//    }
+//    public bool MoveNext()
+//    {
+//        if (i < X.Length - 1)
+//        {
+//            i++;
+//            return true;
+//        }
+//        else
+//            return false;
+//    }
+//    public void Reset() => i = -1;
+//}
