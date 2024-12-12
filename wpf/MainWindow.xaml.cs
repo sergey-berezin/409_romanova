@@ -117,7 +117,7 @@ namespace WpfGenetic
                 openFolderDialog.Title = "Select folder";
                 if (openFolderDialog.ShowDialog() == true)
                 {
-                    ModelView.DirPath = openFolderDialog.FolderName;
+                    ModelView.InitDir(openFolderDialog.FolderName, "write");
                 } else
                 {
                     return;
@@ -135,22 +135,21 @@ namespace WpfGenetic
             openFolderDialog.InitialDirectory = "C:\\";
             if (openFolderDialog.ShowDialog() == true)
             {
-                ModelView.LoadDirPath = openFolderDialog.FolderName;
+                if (ModelView.InitDir(openFolderDialog.FolderName, "read"))
+                {
+                    LoadWindow loadWindow = new LoadWindow(ModelView);
+                    loadWindow.ShowDialog();
+                    DrawPicture();
+                }
+                else
+                {
+                    MessageBox.Show("No files in selected folder");
+                }
             }
             else
             {
                 return;
             }
-            if (ModelView.MainFileExists())
-            {
-                LoadWindow loadWindow = new LoadWindow(ModelView);
-                loadWindow.ShowDialog();
-                DrawPicture();
-            } else
-            {
-                MessageBox.Show("No files in selected folder");
-            }
-            
         }
     }
 }

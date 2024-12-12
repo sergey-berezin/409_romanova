@@ -10,9 +10,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="8*" MinHeight="271.085"></RowDefinition>
+            <RowDefinition Height="9*" MinHeight="271.085"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1.5*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -40,10 +41,13 @@
 
         <Button x:Name="Generate"        Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="Generate Generation"    Click="CreateClick"   HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="400" FontFamily="Bahnschrift SemiBold" FontSize="18" Background="#FF969CFF" BorderThickness="0,0,0,0" Foreground="#FF030508" Opacity="0.9" ClickMode="Press" BorderBrush="#FF0E1792"  />
 
-        <Button x:Name="NextButton"           Grid.Row="4" Grid.Column="0" Content="Next"                 Click="NextButtonClick" VerticalAlignment="Center"         Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Margin="20,0,0,0" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
-        <Button x:Name="MoreNextButton"       Grid.Row="4" Grid.Column="1" Content="Next 10"              Click="MoreNextButtonClick"                                VerticalAlignment="Center"    Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
-        <Button x:Name="StartStop"            Grid.Row="4" Grid.Column="2" Content="Start"                Click="StartStopClick"                                     VerticalAlignment="Center"    Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
+        <Button x:Name="NextButton"           Grid.Row="4" Grid.Column="0" Content="Next"                  Click="NextButtonClick" VerticalAlignment="Center"         Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Margin="20,0,0,0" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
+        <Button x:Name="MoreNextButton"       Grid.Row="4" Grid.Column="1" Content="Next 10"               Click="MoreNextButtonClick"                                VerticalAlignment="Center"    Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
+        <Button x:Name="StartStop"            Grid.Row="4" Grid.Column="2" Content="Start"                 Click="StartStopClick"                                     VerticalAlignment="Center"    Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9" />
         <Button x:Name="SpeedButton"          Grid.Row="4" Grid.Column="3" Content="Faster"                Click="SpeedButtonClick"  VerticalAlignment="Center"      Height="50"   FontFamily="Bahnschrift SemiBold" FontSize="18" Margin="0,0,20,0" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9"  />
+        
+        <Button x:Name="SaveButton"    Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Save"      Click="SaveButtonClick"  VerticalAlignment="Center"  VerticalContentAlignment="Center"    Height="35"   FontFamily="Bahnschrift SemiBold" FontSize="18" Margin="40,0,0,0" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9"  />
+        <Button x:Name="LoadButton"    Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Content="Load"      Click="LoadButtonClick"  VerticalAlignment="Center"  VerticalContentAlignment="Center"    Height="35"   FontFamily="Bahnschrift SemiBold" FontSize="18" Margin="0,0,40,0" Background="#FF969CFF" BorderBrush="#FF969CFF" BorderThickness="0,0,0,0" Opacity="0.9"  />
 
     </Grid>
 </Window>
