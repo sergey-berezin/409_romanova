@@ -32,26 +32,7 @@ namespace WpfGenetic
             ExperimentCnt = experimentCnt;
             Name = savePath + ExperimentCnt.ToString();
         }
-        public string SadMessage(int cnt)
-        {
-            switch (cnt)
-            {
-                case 5:
-                    return "Oh, no(";
-                case 4:
-                    return "Please, don't do this((";
-                case 3:
-                    Name = Name.Replace(' ', '_');
-                    OnPropertyChanged("Name");
-                    return "I'll replace them, okay?";
-                case 2:
-                    return "What's wrong with underscores?(";
-                case 1:
-                    return "probeli ne nuzhni";
-                default:
-                    return "I'm sorry.....";
-            }
-        }
+
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
@@ -77,16 +58,6 @@ namespace WpfGenetic
 
         public void OkClick(object sender, RoutedEventArgs e)
         {
-            if (SaveData.Name.Contains(' '))
-            {
-                MessageBox.Show(SaveData.SadMessage(PatienceCnt));
-                if (PatienceCnt == 0)
-                {
-                    this.Close();
-                }
-                PatienceCnt--;
-                return;
-            }
             try
             {
                 ModelV.SaveExperiment(SaveData.Name);
@@ -107,7 +78,6 @@ namespace WpfGenetic
                 }
             }
         }
-
 
         public void CancelClick(object sender, RoutedEventArgs e)
         {
