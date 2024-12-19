@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<head>
+    <title>Experiments</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main">
+
+        <div class="result">
+            <p id="Square">Square </p>
+            <p id="IterNumber">Iteration </p>
+        </div>
+
+        <div class="buttons">        
+            <!-- <h2>Experiments</h2> -->
+            <input id="cnt1x1" placeholder="Count 1x1"/>
+            <input id="cnt2x2" placeholder="Count 2x2"/>
+            <input id="cnt3x3" placeholder="Count 3x3"/>
+            <input id="popSize" placeholder="Population Size"/>
+            <br>
+            <button id="PutButton">Create new experiment</button>
+            <br>
+            <input id="NextId" placeholder="Enter name"/>
+            <br>
+            <button id="GetButton"> Show experiment</button>
+            <button id="PostButton">Optimize experiment</button>
+            <br>      
+            <input id="DeleteId" placeholder="Enter name" /> 
+            <br> 
+            <button id="DeleteButton">Delete experiment</button>
+        </div>
+
+        <div class="canvas_plus">
+            <p class="filltext" id="FillText">место для вашей рекламы</p>
+            <canvas id="SquareCanvas" width="300" height="300"> </canvas> 
+        </div>
+
+        <div class=list>
+            <ul id="NameList"></ul>
+        </div>
+
+    </div>
+</body>
+
+    <script>
+        LoadNames();
+        let Stop = 1;
+        document.getElementById("PutButton").addEventListener("click", async () => {
+            await CreateEx();
+        });
+
+        document.getElementById("GetButton").addEventListener("click", async () => {
+            await GetEx();
+        });
+
+        document.getElementById("PostButton").addEventListener("click", async () => {
+            await StartStop();
+        });
+
+        document.getElementById("DeleteButton").addEventListener("click", async () => {
+            await DeleteEx();
+        });
+
+        async function LoadNames()
+        {
+            console.log("load");
+            try {
+                let response = await fetch("http://localhost:5282/api/experiments/all");
+                let text = await response.text();
+
+                let Names = JSON.parse(text);
+
+                const NameListHTML = Names.map((item) => `<li>${item}</li>`).join('');
+                document.getElementById("NameList").innerHTML = NameListHTML;
+
+            }
+            catch (e) {
+                e => console.log(e)
+            }
+        }
+        
+        
+        async function StartStop()
+        {
+            if (Stop == 1) {
+                Stop = 0;
+                document.getElementById("PostButton").innerText = "Stop optimization";
+                NextEx();
+            } else {
+                Stop = 1;
+                document.getElementById("PostButton").innerText = "Optimize experiment";
+            } 
+        }
+
+        async function CreateEx()
+        {
+
+            try {
+                let response = await fetch(`http://localhost:5282/api/experiments/${cnt1x1.value}/${cnt2x2.value}/${cnt3x3.value}/${popSize.value}`, {
+                    method: "PUT",
+                });
+                const responseText = await response.text();
+                const newItem = document.createElement('li');
+                newItem.textContent = responseText;
+                document.getElementById('NameList').appendChild(newItem);
+
+            }
+            catch (e) {
+                e => console.log(e)
+            }
+        }
+
+        async function GetEx()
+        {
+
+            try {
+                let response = await fetch(`http://localhost:5282/api/experiments/${NextId.value}`, {
+                    method: "GET",
+                });
+                const responseText = await response.text();
+                Draw(JSON.parse(responseText));
+            }
+            catch (e) {
+                e => console.log(e)
+            }
+        }
+
+        async function NextEx()
+        {
+            try {
+                let response = await fetch(`http://localhost:5282/api/experiments/${NextId.value}`, {
+                    method: "POST",
+                });
+                const responseText = await response.text();
+                let ExText = responseText.split('#', 2);
+
+                Draw(JSON.parse(ExText[1]));
+                document.getElementById("IterNumber").innerText = `Iteration ${JSON.parse(ExText[0]).GenerationNumber}`;
+                document.getElementById("popSize").value = JSON.parse(ExText[0]).PopulationSize;
+                if (!Stop) {
+                    const timerId = setTimeout(NextEx())
+                }
+            }
+            catch (e) {
+                e => console.log(e)
+            }
+        }
+
+        async function DeleteEx()
+        {
+            try {
+                let response = await fetch(`http://localhost:5282/api/experiments/${DeleteId.value}`, {
+                    method: "DELETE",
+                });
+
+                var arr = document.getElementsByTagName('li');
+                for (var key in arr) {
+                    if (arr[key].innerHTML == DeleteId.value)
+                    {
+                        document.getElementById("NameList").removeChild(arr[key]);
+                    }
+                }
+
+            }
+            catch (e) {
+                e => console.log(e)
+            }
+        }
+
+        async function Draw(Gen) {
+            document.getElementById("FillText").style.visibility='hidden';
+            var canvas = document.getElementById("SquareCanvas");
+            let Cnt1x1 = 0, Cnt2x2 = 0; Cnt3x3 = 0;
+            if (canvas.getContext) {
+                var ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#ffecfd";
+                ctx.globalAlpha = 1;
+                let Scale = canvas.clientWidth / (Gen.ItemCount * 4);
+                for (let i = 0; i < Gen.ItemCount; i++) {
+                    if (Gen.Size[i] == 1) { Cnt1x1++; }
+                    if (Gen.Size[i] == 2) { Cnt2x2++; }
+                    if (Gen.Size[i] == 3) { Cnt3x3++; }
+                    ctx.fillRect(Gen.X[i] * Scale, Gen.Y[i]  * Scale, Gen.Size[i] * Scale, Gen.Size[i] * Scale);
+                }
+                document.getElementById("cnt1x1").value = Cnt3x3;
+                document.getElementById("cnt2x2").value = Cnt2x2;
+                document.getElementById("cnt3x3").value = Cnt3x3;
+                document.getElementById("Square").innerText = `Square ${Gen.Square}`;
+            }
+        }
+
+    </script>
